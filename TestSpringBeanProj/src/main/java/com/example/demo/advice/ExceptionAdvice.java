@@ -3,6 +3,8 @@ package com.example.demo.advice;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import javax.validation.ConstraintViolationException;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -26,10 +28,20 @@ public class ExceptionAdvice {
 		t.printStackTrace(new PrintWriter(sw, true));
 		return sw.getBuffer().toString();
 	}
-	
+
 	@ExceptionHandler({ MissingServletRequestParameterException.class })
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public ExceptionData accessDeniedExceptionHandler(MissingServletRequestParameterException exception) {
+		ExceptionData rep = new ExceptionData();
+		rep.setErrorCode(HttpStatus.BAD_REQUEST.name());
+		rep.setErrorMsg(exception.getMessage());
+		rep.setCause(printStackTraceToString(exception));
+		return rep;
+	}
+	
+	@ExceptionHandler({ ConstraintViolationException.class })
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public ExceptionData accessDeniedExceptionHandler(ConstraintViolationException exception) {
 		ExceptionData rep = new ExceptionData();
 		rep.setErrorCode(HttpStatus.BAD_REQUEST.name());
 		rep.setErrorMsg(exception.getMessage());

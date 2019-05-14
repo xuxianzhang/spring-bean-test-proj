@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import javax.annotation.PostConstruct;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class TestController {
 	}
 	
 	@GetMapping("/hello")
-	public String hello(@RequestParam("word") @NotNull(message="不能为空！") String str) {
+	public String hello(@RequestParam("word") @NotEmpty(message="不能为空！") String str) {
 		userFucntionBeanComponent.runFunc();
 		return str;
 	}
